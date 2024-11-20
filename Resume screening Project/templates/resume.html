@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Key Skills Extractor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #5f6368;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding-bottom: 30px;
+        }
+
+        .form-container {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .form-container input[type="file"] {
+            display: none;
+        }
+
+        .form-container label {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .form-container button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        .form-container button:hover {
+            background-color: #218838;
+        }
+
+        .result-container {
+            margin-top: 30px;
+        }
+
+        .result-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .result-item h3 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .result-item p {
+            font-size: 1rem;
+            margin: 5px 0;
+        }
+
+        .result-item .skills {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #5f6368;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .form-container label, .form-container button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Resume Key Skills Extractor</h1>
+</header>
+
+<div class="container">
+    <div class="form-container">
+        <h2>Upload Your Resume</h2>
+        <p>Select a PDF or Text file to extract key skills and other details.</p>
+
+        <form action="/" method="post" enctype="multipart/form-data">
+            <label for="resumes">Choose PDF or Text Files</label>
+            <input type="file" name="resumes" id="resumes" multiple required>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+
+    {% if results %}
+<div class="result-container">
+    <h2>Extraction Results</h2>
+    {% for result in results %}
+    <div class="result-item">
+        <h3>{{ result.filename }}</h3>
+        <p><strong>Job Category:</strong> {{ result.job_category }}</p>
+        <p><strong>Email:</strong> {{ result.email }}</p>
+        <p><strong>Phone:</strong> {{ result.phone }}</p>
+        <p><strong>LinkedIn:</strong> <a href="{{ result.linkedin }}" target="_blank">{{ result.linkedin }}</a></p>
+
+        <div class="skills-section">
+            <h4>Technical Skills:</h4>
+            <p>{{ result.skills['Technical Skills'] | join(', ') if result.skills['Technical Skills'] else 'No technical skills found' }}</p>
+
+            <h4>Soft Skills:</h4>
+            <p>{{ result.skills['Soft Skills'] | join(', ') if result.skills['Soft Skills'] else 'No soft skills found' }}</p>
+
+            <h4>Domain-Specific Skills:</h4>
+            <p>{{ result.skills['Domain-Specific Skills'] | join(', ') if result.skills['Domain-Specific Skills'] else 'No domain-specific skills found' }}</p>
+
+            <h4>Design Skills:</h4>
+            <p>{{ result.skills['Design Skills'] | join(', ') if result.skills['Design Skills'] else 'No design skills found' }}</p>
+        </div>
+
+        {% if result.error %}
+        <p class="error-message">Error: {{ result.error }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+</div>
+
+
+</body>
+</html>
